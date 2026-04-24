@@ -14,14 +14,26 @@ const app = express();
 // ── Security ──────────────────────────────────────────────────────────────────
 app.use(helmet());
 
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',');
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error(`CORS: ${origin} not allowed`));
+    // allow Postman, server-to-server, curl, health checks
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return cb(null, true);
+    }
+    console.log("Blocked by CORS:", origin);
+    return cb(new Error(`CORS: ${origin} not allowed`));
   },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+app.options("*", cors());
 
 // Global rate limit — tighter limits applied per-route where needed
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));

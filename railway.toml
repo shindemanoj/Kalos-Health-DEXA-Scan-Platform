@@ -1,4 +1,7 @@
-# railway.toml (in repository root)
 [build]
-rootDirectory = "backend"  # The folder containing package.json
-builder = "NIXPACKS"       # Railway's default builder for Node.js
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "cd backend && npm install && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

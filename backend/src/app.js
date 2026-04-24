@@ -38,6 +38,9 @@ app.options("*", cors());
 // Global rate limit — tighter limits applied per-route where needed
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
 
+// Global rate limit — tighter limits applied per-route where needed
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
+
 // ── Body parsing ──────────────────────────────────────────────────────────────
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

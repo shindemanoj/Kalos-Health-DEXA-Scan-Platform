@@ -26,18 +26,17 @@ const upload = multer({
   },
 });
 
-router.use(requireAuth);
-
-// GET  /api/scans/:id        — single scan detail
-router.get('/:id', getScan);
-
-// POST /api/scans/upload     — upload PDF, parse, save
-router.post('/upload', upload.single('pdf'), uploadScan);
-
-// DELETE /api/scans/:id      — remove a scan
-router.delete('/:id', deleteScan);
-
-// POST /api/scans/chat       — MemberGPT: natural language query
+// POST /api/scans/chat — public: MemberGPT (no auth per spec)
+// Must be declared BEFORE /:id to avoid Express matching 'chat' as an id param
 router.post('/chat', chatWithScans);
+
+// POST /api/scans/upload — requires auth
+router.post('/upload', requireAuth, upload.single('pdf'), uploadScan);
+
+// GET  /api/scans/:id — requires auth
+router.get('/:id', requireAuth, getScan);
+
+// DELETE /api/scans/:id — requires auth
+router.delete('/:id', requireAuth, deleteScan);
 
 module.exports = router;

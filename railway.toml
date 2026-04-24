@@ -1,0 +1,4 @@
+# railway.toml (in repository root)
+[build]
+rootDirectory = "backend"  # The folder containing package.json
+builder = "NIXPACKS"       # Railway's default builder for Node.js

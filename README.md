@@ -75,7 +75,8 @@ kalos/
 createdb kalos
 psql kalos -f backend/migrations/001_create_users.sql
 psql kalos -f backend/migrations/002_create_scans.sql
-psql kalos -f backend/migrations/003_seed.sql
+# Run the JS seeder — generates real bcrypt hashes at runtime
+cd backend && node scripts/seed.js
 ```
 
 ### 3. Backend
